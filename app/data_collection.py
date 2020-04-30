@@ -1,3 +1,5 @@
+# Download 10 historical and real-time stocks' prices and store them into MySQL
+
 from alpha_vantage.timeseries import TimeSeries
 import pymysql.cursors
 import pymysql
