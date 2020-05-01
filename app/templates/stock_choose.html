@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+   <h1>{{ company }} </h1>
+   <div>
+      <a href="stocks/{{company}}/rt">Real Time</a>
+      <a href="stocks/{{company}}/hist">Historical</a>	    
+      <a href="stocks/{{company}}/pred">Prediction</a>	    	    	
+   </div>
+{% endblock %}

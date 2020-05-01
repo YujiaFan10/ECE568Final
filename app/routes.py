@@ -49,3 +49,22 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/stocks')
+@login_required
+def stocks():
+
+    return render_template('stocks.html')
+
+@app.route('/stocks/<company>')
+@login_required
+def stock_choose(company):
+
+    return render_template('stock_choose.html', company = company)
+
+@app.route('/stocks/<company>/<option>')
+@login_required
+def stock_plot(company, option):
+
+    return render_template('stock_plot.html', company = company, option = option)
+
