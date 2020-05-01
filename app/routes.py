@@ -5,6 +5,13 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
+from sqlalchemy.sql import text
+import pymysql.cursors
+import pymysql
+import csv
+import time
+
+import plotly.graph_objects as go
 
 @app.route('/')
 @app.route('/index')
@@ -65,6 +72,40 @@ def stock_choose(company):
 @app.route('/stocks/<company>/<option>')
 @login_required
 def stock_plot(company, option):
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 passwd='123',
+                                 db='mydb',
+                                 port=3306,
+                                 cursorclass=pymysql.cursors.DictCursor)
+    query = 'SELECT * FROM ' + company + '_' + option;
+    cur = connection.cursor()
+    cur.execute(query)
+    result = cur.fetchall()
+
+    fig = go.Figure()
+
+    time = []
+    open = []
+    high = []
+    low = []
+    close = []
+    volume = []
+    for row in result:
+        time.append(row['time'])
+        open.append(row['open'])
+        high.append(row['high'])
+        low.append(row['low'])
+        close.append(row['close'])
+        volume.append(row['volume'])
+    fig.add_trace(go.Scatter(x = time, y = open, name = 'open'))
+    fig.add_trace(go.Scatter(x = time, y = high, name = 'high'))
+    fig.add_trace(go.Scatter(x = time, y = low, name = 'low'))
+    fig.add_trace(go.Scatter(x = time, y = close, name = 'close'))
+    fig.show()
+    fig.update_layout(title=company + ' ' + option + ' stock',
+                      xaxis_title='Date',
+                      yaxis_title='Price')
 
     return render_template('stock_plot.html', company = company, option = option)
 
