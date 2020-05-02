@@ -14,14 +14,13 @@ import time
 import plotly.graph_objects as go
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index.html')
 @login_required
 def index():
-    user = {'username': 'Miguel'}
-    posts = []
-    return render_template('index.html', title='Home', posts=posts)
 
-@app.route('/login', methods=['GET', 'POST'])
+    return render_template('index.html')
+
+@app.route('/login.html', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -38,12 +37,12 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
-@app.route('/logout')
+@app.route('/logout.html')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register.html', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -57,6 +56,34 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+@app.route('/query.html')
+def query():
+    return render_template('query.html')
+
+@app.route('/realtime.html')
+def realtime():
+    return render_template('realtime.html')
+
+@app.route('/predictions.html')
+def predictions():
+    return render_template('predictions.html')
+
+@app.route('/portfolio.html')
+def portfolio():
+    return render_template('portfolio.html')
+
+@app.route('/indicators.html')
+def indicators():
+    return render_template('indicators.html')
+
+@app.route('/historical.html')
+def historical():
+    return render_template('historical.html')
+
+
+
+
+'''
 @app.route('/stocks')
 @login_required
 def stocks():
@@ -78,11 +105,11 @@ def stock_plot(company, option):
                                  db='mydb',
                                  port=3306,
                                  cursorclass=pymysql.cursors.DictCursor)
-    query = 'SELECT * FROM ' + company + '_' + option;
+    q = 'SELECT * FROM ' + company + '_' + option;
     cur = connection.cursor()
-    cur.execute(query)
+    cur.execute(q)
     result = cur.fetchall()
-
+    print (result[0])
     fig = go.Figure()
 
     time = []
@@ -102,10 +129,28 @@ def stock_plot(company, option):
     fig.add_trace(go.Scatter(x = time, y = high, name = 'high'))
     fig.add_trace(go.Scatter(x = time, y = low, name = 'low'))
     fig.add_trace(go.Scatter(x = time, y = close, name = 'close'))
-    fig.show()
+
     fig.update_layout(title=company + ' ' + option + ' stock',
                       xaxis_title='Date',
                       yaxis_title='Price')
-
+    fig.write_html("app/templates/plot.html")
     return render_template('stock_plot.html', company = company, option = option)
+
+@app.route('/query', methods=['GET', 'POST'])
+@login_required
+def query():
+    if request.method == 'POST':  # this block is only entered when the form is submitted
+        option = request.form.get('queries')
+        if option == "showall":
+            return render_template('query_response.html', cart = car)
+        elif option == "companies":
+            return render_template('query_response.html', cart=car)
+        else:
+            return render_template('query_response.html', cart=car)
+    return render_template('query.html')
+
+
+
+'''
+
 

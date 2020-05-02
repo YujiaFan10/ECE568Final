@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+     <script>
+	function enableCompany(){
+		queries = document.getElementById("queries");
+		company = document.getElementById("company");
+		if(queries.value === "highest" || queries.value === "average" || queries.value === "lowest")
+			company.disabled = false;
+		else
+			company.disabled = true;
+			
+	
+	}
+     </script>
+     <form method="POST">
+        <label for="queries">What do you want to know?</label>
+	<br>
+	<select name = "queries" id = "queries" onchange = "enableCompany()">
+  		<option value="showall">The current price of all stocks.</option>
+  		<option value="highest">The highest stock price of a company in last 10 days.</option>
+  		<option value="average">The average stock price of a company in the latest year.</option>
+  		<option value="lowest">The lowest stock price of a company in the latest year.</option>
+		<option value="companies">Companies that have lower average stock price than the selected companies.</option>
+	</select>
+	<br>
+	
+	<select name = "company" id = "company" disabled>
+		<option value = "FB">FB</option>
+		<option value = "MSFT">MSFT</option>
+		<option value = "AMZN">AMZN</option>
+		<option value = "GOOG">GOOG</option>
+		<option value = "AAPL">AAPL</option>
+		<option value = "GE">GE</option>
+		<option value = "UBER">UBER</option>
+		<option value = "SBUX">SBUX</option>
+		<option value = "COKE">COKE</option>
+		<option value = "NKE">NKE</option>
+	</select>
+	<br>
+	<input type="submit" value="Ask!"><br>
+     </form> 	    	    	
+
+     
+{% endblock %}
